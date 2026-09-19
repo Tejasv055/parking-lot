@@ -78,4 +78,15 @@ public class ParkingSpot {
     public Vehicle getVehicle() {
         return vehicle;
     }
+
+    /**
+     * To check vehicle fit in the spot.
+     *
+     * @param vehicle The vehicle to fit.
+     *
+     * @return heck whether vehicle is fit.
+     */
+    public boolean canFitVehicle(final Vehicle vehicle) {
+        return vehicle.getType().name().equals(this.type.name());
+    }
 }
