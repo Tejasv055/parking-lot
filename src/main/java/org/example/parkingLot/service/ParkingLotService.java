@@ -4,6 +4,7 @@ import org.example.parkingLot.model.ParkingLot;
 import org.example.parkingLot.model.Ticket;
 import org.example.parkingLot.model.Vehicle;
 import org.example.parkingLot.strategy.ParkingSpotStrategy;
+import org.example.parkingLot.strategy.PaymentStrategy;
 import org.example.parkingLot.strategy.PricingStrategy;
 
 import java.time.LocalDateTime;
@@ -20,12 +21,16 @@ public class ParkingLotService {
 
     private final PricingStrategy pricingStrategy;
 
+    private final PaymentStrategy paymentStrategy;
+
     public ParkingLotService(final ParkingLot lot,
-                             final ParkingSpotStrategy strategy
-        , final PricingStrategy pricingStrategy) {
+                             final ParkingSpotStrategy strategy,
+                             final PricingStrategy pricingStrategy,
+                             final PaymentStrategy paymentStrategy) {
         this.parkingLot = lot;
         this.parkingSpotStrategy = strategy;
         this.pricingStrategy = pricingStrategy;
+        this.paymentStrategy = paymentStrategy;
 
     }
 
@@ -39,6 +44,7 @@ public class ParkingLotService {
     public double exitVehicle(final Ticket ticket) {
         final var price = pricingStrategy.calculatePrice(ticket);
 
+        paymentStrategy.pay(price);
         ticket.getParkingSpot().removeVehicle();
 
         return price;
