@@ -64,6 +64,10 @@ public class ParkingLotService {
         if (spot == null) {
             throw new IllegalStateException("No suitable parking spot is available.");
         }
+
+        if (isAlreadyParked(vehicle)) {
+            throw new IllegalStateException("Vehicle already parked.");
+        }
         spot.park(vehicle);
 
         return new Ticket(generateTicketId(),
@@ -77,6 +81,23 @@ public class ParkingLotService {
      */
     private String generateTicketId() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * To check whether vehicle is already parked or not.
+     *
+     * @param vehicle The vehicle to check.
+     */
+    private boolean isAlreadyParked(final Vehicle vehicle) {
+        for (final var floor : parkingLot.getFloors()) {
+            for (final var spot : floor.getSpots()) {
+                if (!spot.isFree() && spot.getVehicle().getLicenseNumber()
+                                          .equals(vehicle.getLicenseNumber())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
